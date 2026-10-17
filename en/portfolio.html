@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creative Strategist Portfolio</title>
+<!--
+  PORTFOLIO (EN) — "Creative Lab Report" design.
+  Each <section class="slide"> becomes one 16:9 PDF page.
+  Images: drop files into en/assets/img/ using the names shown in each
+  placeholder (case-1.jpg … case-4.jpg, proof-1.png …, photo.jpg, logo-01.png …).
+  Missing files fall back to a styled placeholder.
+  When your real numbers are in, add class="final" to <body> to hide the
+  "SAMPLE DATA" tags.
+  Build:  npm run build:en
+-->
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+  :root {
+    --paper: #f2efe8;
+    --paper-2: #e7e2d7;
+    --ink: #121212;
+    --ink-2: #3b3934;
+    --muted: #8a857a;
+    --rule: #cdc6b8;
+    --accent: #ff4a1c;
+    --accent-soft: #ffd9cc;
+  }
+  @page { size: 960px 540px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #1b1b1b; }
+  body { font-family: "Inter", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.final .sample { display: none; }
+
+  .slide {
+    position: relative; width: 960px; height: 540px; overflow: hidden; margin: 0 auto 24px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='540'><defs><pattern id='g' width='24' height='24' patternUnits='userSpaceOnUse'><path d='M24 0H0V24' fill='none' stroke='%23000' stroke-opacity='.06' stroke-width='1'/></pattern></defs><rect width='960' height='540' fill='url(%23g)'/></svg>") 0 0 / 960px 540px no-repeat, var(--paper);
+    padding: 30px 40px 0;
+    break-after: page; page-break-after: always;
+  }
+  .slide.dark { background: var(--ink); color: var(--paper); }
+  @media print { html, body { background: none; } .slide { margin: 0; } }
+
+  .mono { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+  .display { font-family: "Archivo", sans-serif; font-stretch: condensed; font-weight: 900; text-transform: uppercase; line-height: .9; letter-spacing: -.01em; }
+  .wide { font-family: "Archivo", sans-serif; font-stretch: expanded; font-weight: 900; text-transform: uppercase; }
+
+  /* Running header / footer */
+  .head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 9px; border-bottom: 1.5px solid var(--ink); }
+  .dark .head { border-color: var(--paper); }
+  .head .mid { display: flex; gap: 18px; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 6px; vertical-align: 0; }
+  .foot { position: absolute; left: 40px; right: 40px; bottom: 16px; display: flex; justify-content: space-between; color: var(--muted); }
+
+  .sample { display: inline-block; border: 1px dashed currentColor; padding: 1px 5px; border-radius: 3px; font-family: "JetBrains Mono", monospace; font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; opacity: .75; }
+
+  /* Phone frame for 9:16 creatives */
+  .phone { position: relative; border-radius: 26px; background: var(--ink); padding: 6px; }
+  .phone .screen { position: relative; width: 100%; height: 100%; border-radius: 21px; overflow: hidden; }
+  .phone .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+  .phone .ph { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 18px 10px 48px; text-align: center; }
+  .phone .ph code { font: 400 8px "JetBrains Mono", monospace; color: rgba(255,255,255,.75); }
+  .phone .notch { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 46px; height: 12px; border-radius: 8px; background: var(--ink); z-index: 4; }
+  .phone .cap { position: absolute; left: 12px; right: 12px; top: 30%; z-index: 3; text-align: center; }
+  .phone .cap span { background: #fff; color: #111; font: 700 11px/1.55 "Inter"; padding: 3px 6px; border-radius: 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .phone .play { position: absolute; z-index: 3; left: 50%; top: 58%; transform: translate(-50%,-50%); width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.92); display: grid; place-items: center; }
+  .phone .play::after { content: ""; margin-left: 4px; border-left: 13px solid var(--ink); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+  .phone .ui { position: absolute; right: 9px; bottom: 60px; z-index: 3; display: flex; flex-direction: column; gap: 9px; }
+  .phone .ui i { width: 17px; height: 17px; border-radius: 50%; background: rgba(255,255,255,.85); display: block; }
+  .phone .bar { position: absolute; left: 12px; right: 40px; bottom: 16px; z-index: 3; }
+  .phone .bar b { display: block; height: 5px; width: 55%; background: rgba(255,255,255,.85); border-radius: 3px; margin-bottom: 5px; }
+  .phone .bar b + b { width: 80%; opacity: .6; }
+  .g1 { background: linear-gradient(160deg, #e9b9a0, #b5694d 55%, #5a2c22); }
+  .g2 { background: linear-gradient(160deg, #c7d3b6, #6e8a5c 55%, #2b3a25); }
+  .g3 { background: linear-gradient(160deg, #f0d48c, #c58b3a 55%, #5b3a16); }
+  .g4 { background: linear-gradient(160deg, #6d6f8f, #2e2f4a 55%, #0f0f1c); }
+
+  /* ============ COVER ============ */
+  .cover h1 { font-size: 66px; margin-top: 44px; width: 520px; }
+  .cover h1 em { font-style: normal; color: var(--accent); }
+  .cover .who { margin-top: 18px; display: flex; gap: 14px; align-items: baseline; }
+  .cover .who b { font: 900 18px "Archivo"; font-stretch: expanded; text-transform: uppercase; }
+  .cover .who span { font: 500 12.5px "Inter"; color: var(--ink-2); }
+  .cover .stats { position: absolute; left: 40px; right: 40px; bottom: 40px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px solid var(--ink); }
+  .cover .stats div { padding: 12px 14px 0 0; }
+  .cover .stats div + div { padding-left: 14px; border-left: 1px solid var(--rule); }
+  .cover .stats b { display: block; font: 900 38px/1 "Archivo"; font-stretch: condensed; }
+  .cover .stats b.acc { color: var(--accent); }
+  .cover .stats span { display: block; margin-top: 5px; color: var(--ink-2); }
+  .cover .fan { position: absolute; right: 44px; top: 66px; width: 330px; height: 300px; }
+  .cover .fan .phone { position: absolute; width: 132px; height: 250px; }
+
+  /* ============ INDEX ============ */
+  .index-title { font-size: 54px; margin-top: 26px; }
+  .index-title em { font-style: normal; color: var(--accent); }
+  .lede { font: 400 13px/1.55 "Inter"; color: var(--ink-2); width: 330px; margin-top: 14px; }
+  .toc { position: absolute; right: 40px; top: 86px; width: 470px; }
+  .toc .row { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--rule); }
+  .toc .row:first-child { border-top: 1.5px solid var(--ink); }
+  .toc .n { font: 900 34px/1 "Archivo"; font-stretch: condensed; color: var(--accent); }
+  .toc .t { font: 700 15px/1.2 "Inter"; }
+  .toc .t small { display: block; font: 400 10.5px "Inter"; color: var(--muted); margin-top: 3px; }
+  .toc .r { text-align: right; }
+  .toc .r b { display: block; font: 900 22px/1 "Archivo"; font-stretch: condensed; }
+  .toc .r span { color: var(--muted); }
+
+  /* ============ CASE ============ */
+  .case-grid { display: grid; grid-template-columns: 196px 1fr 248px; gap: 26px; margin-top: 18px; height: 432px; }
+  .case-grid .phone { width: 196px; height: 370px; }
+  .watch { display: flex; align-items: center; gap: 6px; margin-top: 12px; color: var(--ink); text-decoration: none; }
+  .watch::before { content: "▶"; color: var(--accent); font-size: 9px; }
+  .case h2 { font-size: 44px; margin-top: 2px; }
+  .case .kicker { color: var(--accent); }
+  .field { margin-top: 12px; }
+  .field .mono { color: var(--muted); margin-bottom: 4px; }
+  .field p { font: 400 11.5px/1.5 "Inter"; color: var(--ink-2); }
+  .hook { font: 600 16px/1.35 "Inter"; color: var(--ink); border-left: 3px solid var(--accent); padding-left: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chips span { font: 500 10px "Inter"; padding: 4px 8px; border: 1px solid var(--ink); border-radius: 20px; }
+  .chips span.on { background: var(--ink); color: var(--paper); }
+
+  .results { background: var(--ink); color: var(--paper); border-radius: 4px; padding: 16px 16px 14px; display: flex; flex-direction: column; }
+  .results .top { display: flex; justify-content: space-between; align-items: center; color: #a9a497; }
+  .results .hero { margin-top: 12px; }
+  .results .hero b { font: 900 64px/.9 "Archivo"; font-stretch: condensed; color: var(--accent); }
+  .results .hero span { display: block; margin-top: 4px; color: #d8d3c6; }
+  .results .kpis { display: grid; grid-template-columns: 1fr 1fr; margin-top: 14px; border-top: 1px solid #3a3a3a; }
+  .results .kpis div { padding: 9px 0 8px; border-bottom: 1px solid #3a3a3a; }
+  .results .kpis div:nth-child(odd) { border-right: 1px solid #3a3a3a; }
+  .results .kpis div:nth-child(even) { padding-left: 12px; }
+  .results .kpis b { display: block; font: 800 20px/1 "Archivo"; font-stretch: condensed; }
+  .results .kpis span { display: block; margin-top: 3px; color: #a9a497; font-size: 8px; }
+  .vs { margin-top: 12px; }
+  .vs .mono { color: #a9a497; margin-bottom: 6px; }
+  .vs .bar { display: grid; grid-template-columns: 52px 1fr 44px; align-items: center; gap: 6px; margin-top: 4px; font: 500 9px "Inter"; color: #d8d3c6; }
+  .vs .bar i { display: block; height: 9px; border-radius: 2px; background: #555; }
+  .vs .bar i.me { background: var(--accent); }
+  .vs .bar em { font-style: normal; text-align: right; }
+  .proof { margin-top: auto; position: relative; height: 84px; text-align: center; line-height: 1.6; border: 1px dashed #555; border-radius: 3px; display: grid; place-items: center; color: #8d887c; overflow: hidden; }
+  .proof img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+
+  /* ============ PROCESS ============ */
+  .proc-title { font-size: 54px; margin-top: 24px; }
+  .proc-title em { font-style: normal; color: var(--accent); }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 30px; position: relative; }
+  .steps::before { content: ""; position: absolute; left: 0; right: 0; top: 17px; height: 1.5px; background: var(--paper); opacity: .35; }
+  .step { padding-right: 18px; position: relative; }
+  .step .num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: var(--ink); display: grid; place-items: center; font: 900 15px "Archivo"; font-stretch: condensed; position: relative; }
+  .step h4 { font: 900 22px/1 "Archivo"; font-stretch: condensed; text-transform: uppercase; margin-top: 14px; }
+  .step p { font: 400 10.5px/1.5 "Inter"; color: #c9c4b7; margin-top: 7px; }
+  .loop { margin-top: 22px; display: flex; align-items: center; gap: 10px; color: var(--accent); }
+  .loop::before { content: ""; flex: 1; height: 1.5px; background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 11px); }
+  .tests { position: absolute; left: 40px; right: 40px; bottom: 44px; display: grid; grid-template-columns: 120px repeat(4, 1fr); gap: 16px; border-top: 1px solid #3a3a3a; padding-top: 14px; }
+  .tests .mono { color: #a9a497; }
+  .tests b { display: block; font: 700 12px "Inter"; margin-bottom: 4px; }
+  .tests span { font: 400 10px/1.45 "Inter"; color: #c9c4b7; }
+
+  /* ============ ABOUT ============ */
+  .about-grid { display: grid; grid-template-columns: 250px 1fr 250px; gap: 28px; margin-top: 22px; }
+  .photo { position: relative; height: 330px; border-radius: 4px; overflow: hidden; background: linear-gradient(160deg, #cfc7b7, #8a8172); }
+  .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+  .photo .ph { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: rgba(255,255,255,.85); }
+  .photo .tag { position: absolute; z-index: 3; left: 10px; bottom: 10px; background: var(--paper); padding: 4px 7px; border-radius: 3px; }
+  .about h2 { font-size: 50px; }
+  .about h2 em { font-style: normal; color: var(--accent); }
+  .about .bio { font: 400 12px/1.6 "Inter"; color: var(--ink-2); margin-top: 12px; }
+  .about .bio + .bio { margin-top: 8px; }
+  .quote { margin-top: 16px; padding: 12px 14px; background: var(--paper-2); border-radius: 4px; }
+  .quote p { font: 600 12.5px/1.45 "Inter"; }
+  .quote .mono { color: var(--muted); margin-top: 6px; }
+  .logos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 8px; }
+  .logos div { position: relative; height: 36px; border: 1px solid var(--rule); border-radius: 3px; display: grid; place-items: center; color: var(--muted); background: rgba(255,255,255,.35); }
+  .logos img { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); object-fit: contain; z-index: 2; background: var(--paper); }
+  .contact { margin-top: 12px; background: var(--accent); color: var(--ink); border-radius: 4px; padding: 12px 14px; }
+  .contact b { display: block; font: 900 20px/1 "Archivo"; font-stretch: condensed; text-transform: uppercase; margin-bottom: 8px; }
+  .contact div { font: 500 10.5px/1.7 "Inter"; }
+</style>
+</head>
+<body>
+
+<!-- ================= 01 — COVER ================= -->
+<section class="slide cover">
+  <div class="head mono"><span><span class="dot"></span>Creative Lab Report — Portfolio 2026</span><span class="mid"><span>DTC / E-commerce</span><span>Meta · TikTok · Google</span></span><span>Available for new brands</span></div>
+
+  <h1 class="display">I make people <em>stop scrolling</em> and start buying.</h1>
+  <div class="who"><b>Your Name</b><span>Creative Strategist &amp; Video Editor</span></div>
+
+  <div class="fan">
+    <div class="phone" style="left:0; top:34px; transform:rotate(-8deg);"><div class="screen g1"><img src="assets/img/case-1.jpg" onerror="this.remove()"><div class="notch"></div></div></div>
+    <div class="phone" style="left:186px; top:34px; transform:rotate(8deg);"><div class="screen g3"><img src="assets/img/case-3.jpg" onerror="this.remove()"><div class="notch"></div></div></div>
+    <div class="phone" style="left:94px; top:6px; z-index:2;"><div class="screen g4"><img src="assets/img/case-4.jpg" onerror="this.remove()"><div class="notch"></div><div class="play"></div></div></div>
+  </div>
+
+  <div class="stats"><span class="sample" style="position:absolute; right:0; top:-18px;">Sample data</span>
+    <div><b class="acc">$1.6M</b><span class="mono">Ad spend managed</span></div>
+    <div><b>3.2x</b><span class="mono">Average ROAS</span></div>
+    <div><b>40+</b><span class="mono">DTC brands</span></div>
+    <div><b>500+</b><span class="mono">Creatives shipped</span></div>
+  </div>
+</section>
+
+<!-- ================= 02 — INDEX ================= -->
+<section class="slide">
+  <div class="head mono"><span><span class="dot"></span>Contents</span><span>Four experiments</span></div>
+  <h2 class="display index-title">Four ads.<br>One rule:<br><em>earn the first<br>2 seconds.</em></h2>
+  <p class="lede">Every case in this report started as a hypothesis, was written as a brief, shipped as a creative, and was judged by the data — not by taste.</p>
+
+  <div class="toc">
+    <div class="row"><span class="n">01</span><span class="t">Day 1 vs. Day 21<small>Skincare · UGC testimonial</small></span><span class="r"><b>3.4x</b><span class="mono">ROAS</span></span></div>
+    <div class="row"><span class="n">02</span><span class="t">The founder's confession<small>Supplements · Founder-led</small></span><span class="r"><b>−33%</b><span class="mono">CPA vs control</span></span></div>
+    <div class="row"><span class="n">03</span><span class="t">POV: he slept through the storm<small>Pet · Native TikTok</small></span><span class="r"><b>46%</b><span class="mono">Hook rate</span></span></div>
+    <div class="row"><span class="n">04</span><span class="t">A 100-year-old idea<small>Wellness device · AI cinematic</small></span><span class="r"><b>$310K</b><span class="mono">Spend scaled</span></span></div>
+  </div>
+
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>02 / 08</span></div>
+</section>
+
+<!-- ================= 03 — CASE 01 ================= -->
+<section class="slide case">
+  <div class="head mono"><span><span class="dot"></span>Experiment 01 / 04</span><span class="mid"><span>Skincare</span><span>UGC testimonial</span><span>Meta Ads</span></span><span>Ran 94 days</span></div>
+  <div class="case-grid">
+    <div>
+      <div class="phone"><div class="screen g1">
+        <img src="assets/img/case-1.jpg" onerror="this.remove()">
+        <div class="ph"><code>assets/img/case-1.jpg</code></div>
+        <div class="notch"></div>
+        <div class="cap"><span>nobody warned me my skin would look like this in 3 weeks</span></div>
+        <div class="play"></div><div class="ui"><i></i><i></i><i></i></div><div class="bar"><b></b><b></b></div>
+      </div></div>
+      <a class="watch mono" href="#">Watch the ad</a>
+    </div>
+    <div>
+      <div class="mono kicker">Case 01</div>
+      <h2 class="display">Day 1 vs.<br>Day 21</h2>
+      <div class="field"><div class="mono">Hypothesis</div><p>A visible before/after, told by a real customer, beats polished product shots on cold traffic.</p></div>
+      <div class="field"><div class="mono">Hook</div><p class="hook">“Nobody warned me my skin would look like this in 3 weeks.”</p></div>
+      <div class="field"><div class="mono">Angle</div><p>Morning routine + social proof. Shot on a phone, natural light, talked to camera like a story for friends.</p></div>
+      <div class="field"><div class="mono">My role</div><div class="chips"><span class="on">Research</span><span class="on">Script</span><span class="on">Creator brief</span><span class="on">Edit</span><span>Media buying</span></div></div>
+    </div>
+    <div class="results">
+      <div class="top mono"><span>Result</span><span class="sample">Sample data</span></div>
+      <div class="hero"><b>3.4x</b><span class="mono">ROAS</span></div>
+      <div class="kpis">
+        <div><b>$212K</b><span class="mono">Spend</span></div>
+        <div><b>38%</b><span class="mono">Hook rate</span></div>
+        <div><b>$18.20</b><span class="mono">CPA</span></div>
+        <div><b>1.9%</b><span class="mono">CTR</span></div>
+      </div>
+      <div class="vs">
+        <div class="mono">CPA vs. control (−41%)</div>
+        <div class="bar"><span>Control</span><i style="width:100%"></i><em>$30.90</em></div>
+        <div class="bar"><span>This ad</span><i class="me" style="width:59%"></i><em>$18.20</em></div>
+      </div>
+      <div class="proof mono"><img src="assets/img/proof-1.png" onerror="this.remove()">Ads Manager proof<br>proof-1.png</div>
+    </div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>03 / 08</span></div>
+</section>
+
+<!-- ================= 04 — CASE 02 ================= -->
+<section class="slide case">
+  <div class="head mono"><span><span class="dot"></span>Experiment 02 / 04</span><span class="mid"><span>Supplements</span><span>Founder-led</span><span>Meta Ads</span></span><span>Ran 61 days</span></div>
+  <div class="case-grid">
+    <div>
+      <div class="phone"><div class="screen g2">
+        <img src="assets/img/case-2.jpg" onerror="this.remove()">
+        <div class="ph"><code>assets/img/case-2.jpg</code></div>
+        <div class="notch"></div>
+        <div class="cap"><span>I almost didn't launch this. here's why.</span></div>
+        <div class="play"></div><div class="ui"><i></i><i></i><i></i></div><div class="bar"><b></b><b></b></div>
+      </div></div>
+      <a class="watch mono" href="#">Watch the ad</a>
+    </div>
+    <div>
+      <div class="mono kicker">Case 02</div>
+      <h2 class="display">The founder's<br>confession</h2>
+      <div class="field"><div class="mono">Hypothesis</div><p>Admitting what the product <i>can't</i> do builds more trust than listing everything it can.</p></div>
+      <div class="field"><div class="mono">Hook</div><p class="hook">“I almost didn't launch this — here's why.”</p></div>
+      <div class="field"><div class="mono">Angle</div><p>Founder story + objection handling. One take, kitchen table, no B-roll for the first 8 seconds.</p></div>
+      <div class="field"><div class="mono">My role</div><div class="chips"><span class="on">Research</span><span class="on">Script</span><span class="on">Founder coaching</span><span class="on">Edit</span><span>Media buying</span></div></div>
+    </div>
+    <div class="results">
+      <div class="top mono"><span>Result</span><span class="sample">Sample data</span></div>
+      <div class="hero"><b>−33%</b><span class="mono">CPA vs. control</span></div>
+      <div class="kpis">
+        <div><b>$148K</b><span class="mono">Spend</span></div>
+        <div><b>2.9x</b><span class="mono">ROAS</span></div>
+        <div><b>34%</b><span class="mono">Hook rate</span></div>
+        <div><b>2.1%</b><span class="mono">CTR</span></div>
+      </div>
+      <div class="vs">
+        <div class="mono">CPA vs. control</div>
+        <div class="bar"><span>Control</span><i style="width:100%"></i><em>$36.00</em></div>
+        <div class="bar"><span>This ad</span><i class="me" style="width:67%"></i><em>$24.10</em></div>
+      </div>
+      <div class="proof mono"><img src="assets/img/proof-2.png" onerror="this.remove()">Ads Manager proof<br>proof-2.png</div>
+    </div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>04 / 08</span></div>
+</section>
+
+<!-- ================= 05 — CASE 03 ================= -->
+<section class="slide case">
+  <div class="head mono"><span><span class="dot"></span>Experiment 03 / 04</span><span class="mid"><span>Pet</span><span>Native TikTok / POV</span><span>Meta + TikTok</span></span><span>Ran 72 days</span></div>
+  <div class="case-grid">
+    <div>
+      <div class="phone"><div class="screen g3">
+        <img src="assets/img/case-3.jpg" onerror="this.remove()">
+        <div class="ph"><code>assets/img/case-3.jpg</code></div>
+        <div class="notch"></div>
+        <div class="cap"><span>POV: it's 2am, there's thunder, and he didn't even wake up</span></div>
+        <div class="play"></div><div class="ui"><i></i><i></i><i></i></div><div class="bar"><b></b><b></b></div>
+      </div></div>
+      <a class="watch mono" href="#">Watch the ad</a>
+    </div>
+    <div>
+      <div class="mono kicker">Case 03</div>
+      <h2 class="display">POV: he slept<br>through the storm</h2>
+      <div class="field"><div class="mono">Hypothesis</div><p>If it looks like an organic post, it earns the scroll-stop. The product can wait until second 6.</p></div>
+      <div class="field"><div class="mono">Hook</div><p class="hook">“POV: it's 2am, there's thunder, and he didn't even wake up.”</p></div>
+      <div class="field"><div class="mono">Angle</div><p>Relatable pet-parent moment, trending audio, on-screen text only. Product reveal framed as “the thing that changed it”.</p></div>
+      <div class="field"><div class="mono">My role</div><div class="chips"><span class="on">Trend research</span><span class="on">Concept</span><span class="on">Shot list</span><span class="on">Edit</span><span>Media buying</span></div></div>
+    </div>
+    <div class="results">
+      <div class="top mono"><span>Result</span><span class="sample">Sample data</span></div>
+      <div class="hero"><b>46%</b><span class="mono">Hook rate</span></div>
+      <div class="kpis">
+        <div><b>4.1x</b><span class="mono">ROAS</span></div>
+        <div><b>2.3M</b><span class="mono">Views</span></div>
+        <div><b>$14.80</b><span class="mono">CPA</span></div>
+        <div><b>$96K</b><span class="mono">Spend</span></div>
+      </div>
+      <div class="vs">
+        <div class="mono">CPA vs. control (−38%)</div>
+        <div class="bar"><span>Control</span><i style="width:100%"></i><em>$23.90</em></div>
+        <div class="bar"><span>This ad</span><i class="me" style="width:62%"></i><em>$14.80</em></div>
+      </div>
+      <div class="proof mono"><img src="assets/img/proof-3.png" onerror="this.remove()">Ads Manager proof<br>proof-3.png</div>
+    </div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>05 / 08</span></div>
+</section>
+
+<!-- ================= 06 — CASE 04 ================= -->
+<section class="slide case">
+  <div class="head mono"><span><span class="dot"></span>Experiment 04 / 04</span><span class="mid"><span>Wellness device</span><span>AI cinematic</span><span>Meta Ads</span></span><span>Ran 120+ days</span></div>
+  <div class="case-grid">
+    <div>
+      <div class="phone"><div class="screen g4">
+        <img src="assets/img/case-4.jpg" onerror="this.remove()">
+        <div class="ph"><code>assets/img/case-4.jpg</code></div>
+        <div class="notch"></div>
+        <div class="cap"><span>in 1921, a doctor wrote down an idea nobody believed</span></div>
+        <div class="play"></div><div class="ui"><i></i><i></i><i></i></div><div class="bar"><b></b><b></b></div>
+      </div></div>
+      <a class="watch mono" href="#">Watch the ad</a>
+    </div>
+    <div>
+      <div class="mono kicker">Case 04</div>
+      <h2 class="display">A 100-year-<br>old idea</h2>
+      <div class="field"><div class="mono">Hypothesis</div><p>A story-first, cinematic opener reframes a gadget as a discovery — not another product.</p></div>
+      <div class="field"><div class="mono">Hook</div><p class="hook">“In 1921, a doctor wrote down an idea nobody believed.”</p></div>
+      <div class="field"><div class="mono">Angle</div><p>Historical narrative built with AI-generated scenes, classical score and dramatic pauses. Indirect pitch in the last 8 seconds.</p></div>
+      <div class="field"><div class="mono">My role</div><div class="chips"><span class="on">Concept</span><span class="on">Script</span><span class="on">AI generation</span><span class="on">Sound design</span><span class="on">Edit</span></div></div>
+    </div>
+    <div class="results">
+      <div class="top mono"><span>Result</span><span class="sample">Sample data</span></div>
+      <div class="hero"><b>$310K</b><span class="mono">Spend scaled</span></div>
+      <div class="kpis">
+        <div><b>2.6x</b><span class="mono">ROAS</span></div>
+        <div><b>41%</b><span class="mono">Hook rate</span></div>
+        <div><b>0:14</b><span class="mono">Avg. watch time</span></div>
+        <div><b>$27.40</b><span class="mono">CPA</span></div>
+      </div>
+      <div class="vs">
+        <div class="mono">CPA vs. control (−29%)</div>
+        <div class="bar"><span>Control</span><i style="width:100%"></i><em>$38.60</em></div>
+        <div class="bar"><span>This ad</span><i class="me" style="width:71%"></i><em>$27.40</em></div>
+      </div>
+      <div class="proof mono"><img src="assets/img/proof-4.png" onerror="this.remove()">Ads Manager proof<br>proof-4.png</div>
+    </div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>06 / 08</span></div>
+</section>
+
+<!-- ================= 07 — PROCESS ================= -->
+<section class="slide dark">
+  <div class="head mono"><span><span class="dot"></span>Method</span><span>How a winner gets made</span></div>
+  <h2 class="display proc-title">The loop behind<br><em>every winner.</em></h2>
+  <div class="steps">
+    <div class="step"><div class="num">01</div><h4>Dig</h4><p>Reviews, Reddit threads, comments and competitor ads. I look for the exact words customers use.</p></div>
+    <div class="step"><div class="num">02</div><h4>Hypothesize</h4><p>One angle, one variable, one metric that decides if it worked.</p></div>
+    <div class="step"><div class="num">03</div><h4>Brief</h4><p>Hook stack, script, avatar and shot direction — clear enough for any creator or editor.</p></div>
+    <div class="step"><div class="num">04</div><h4>Produce</h4><p>UGC, founder, native or AI. Every concept ships with 3–5 hook variations.</p></div>
+    <div class="step"><div class="num">05</div><h4>Read &amp; iterate</h4><p>Hook rate, hold rate, CPA. Kill fast, iterate on signal, scale what wins.</p></div>
+  </div>
+  <div class="loop mono">Every winner becomes the next control ↺</div>
+  <div class="tests">
+    <div class="mono">What I test</div>
+    <div><b>Hooks</b><span>Visual, verbal and text-on-screen openers</span></div>
+    <div><b>Angles</b><span>Pain, desire, objection, story, social proof</span></div>
+    <div><b>Formats</b><span>UGC, founder-led, native/POV, AI cinematic</span></div>
+    <div><b>Avatars</b><span>Who says it matters as much as what's said</span></div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>07 / 08</span></div>
+</section>
+
+<!-- ================= 08 — ABOUT / CONTACT ================= -->
+<section class="slide about">
+  <div class="head mono"><span><span class="dot"></span>About</span><span>Let's work together</span></div>
+  <div class="about-grid">
+    <div class="photo">
+      <img src="assets/img/photo.jpg" onerror="this.remove()">
+      <div class="ph mono">Your photo<br>assets/img/photo.jpg</div>
+      <div class="tag mono">Your Name · Based in Brazil · Working US hours</div>
+    </div>
+    <div>
+      <h2 class="display">Hi, I'm<br><em>Your Name.</em></h2>
+      <p class="bio">Creative Strategist and Video Editor focused on DTC and e-commerce. I build direct-response creatives for Meta Ads, TikTok Shop and Google — from the customer research to the final cut.</p>
+      <p class="bio">I care about the details nobody notices and everybody feels: the first frame, the first word, the pause before the reveal. Outside of ads: [hobby], [hobby] and [hobby].</p>
+      <div class="quote"><p>“We were very happy with the results of the work and scaled significantly with it.”</p><div class="mono">— Client name, COO · Brand</div></div>
+    </div>
+    <div>
+      <div class="mono" style="color:var(--muted);">Brands I've worked with</div>
+      <div class="logos">
+        <div class="mono"><img src="assets/img/logo-01.png" onerror="this.remove()">Logo 01</div>
+        <div class="mono"><img src="assets/img/logo-02.png" onerror="this.remove()">Logo 02</div>
+        <div class="mono"><img src="assets/img/logo-03.png" onerror="this.remove()">Logo 03</div>
+        <div class="mono"><img src="assets/img/logo-04.png" onerror="this.remove()">Logo 04</div>
+        <div class="mono"><img src="assets/img/logo-05.png" onerror="this.remove()">Logo 05</div>
+        <div class="mono"><img src="assets/img/logo-06.png" onerror="this.remove()">Logo 06</div>
+      </div>
+      <div class="contact">
+        <b>Let's build your next winner.</b>
+        <div>you@email.com<br>linkedin.com/in/yourname<br>yourportfolio.com</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot mono"><span>Your Name — Creative Strategist</span><span>08 / 08</span></div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+@font-face { font-family: "Archivo"; font-weight: 800; font-stretch: condensed; src: url(fonts/Archivo-800-condensed.ttf); }
+@font-face { font-family: "Archivo"; font-weight: 900; font-stretch: condensed; src: url(fonts/Archivo-900-condensed.ttf); }
+@font-face { font-family: "Archivo"; font-weight: 900; font-stretch: expanded; src: url(fonts/Archivo-900-expanded.ttf); }
+@font-face { font-family: "Inter"; font-weight: 400; font-stretch: normal; src: url(fonts/Inter-400-normal.ttf); }
+@font-face { font-family: "Inter"; font-weight: 500; font-stretch: normal; src: url(fonts/Inter-500-normal.ttf); }
+@font-face { font-family: "Inter"; font-weight: 600; font-stretch: normal; src: url(fonts/Inter-600-normal.ttf); }
+@font-face { font-family: "Inter"; font-weight: 700; font-stretch: normal; src: url(fonts/Inter-700-normal.ttf); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400; font-stretch: normal; src: url(fonts/JetBrainsMono-400-normal.ttf); }

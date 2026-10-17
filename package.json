@@ -2,7 +2,8 @@
   "name": "portfolio-pdf",
   "private": true,
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "build:en": "node build.js en"
   },
   "devDependencies": {
     "playwright": "^1.56.1"
