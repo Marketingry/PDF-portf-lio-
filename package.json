@@ -1,0 +1,10 @@
+{
+  "name": "portfolio-pdf",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

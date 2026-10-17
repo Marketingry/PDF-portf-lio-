@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Portfólio</title>
+<!--
+  PORTFÓLIO — template no estilo "desktop retrô" (Windows 95/98).
+  Cada <section class="slide"> vira uma página 16:9 no PDF.
+  Imagens: coloque os arquivos em assets/img/ com os nomes indicados
+  (ex.: criativo-1.jpg). Se o arquivo não existir, aparece um placeholder.
+  Para gerar o PDF:  npm install && npm run build
+-->
+<style>
+  @font-face { font-family: "Montserrat"; font-weight: 700; src: url(assets/fonts/Montserrat-Bold.ttf); }
+  @font-face { font-family: "Montserrat"; font-weight: 900; src: url(assets/fonts/Montserrat-Black.ttf); }
+  @font-face { font-family: "Montserrat"; font-weight: 700; font-style: italic; src: url(assets/fonts/Montserrat-BoldItalic.ttf); }
+  @font-face { font-family: "Montserrat"; font-weight: 900; font-style: italic; src: url(assets/fonts/Montserrat-BlackItalic.ttf); }
+  @font-face { font-family: "Pixel"; src: url(assets/fonts/VT323-Regular.ttf); }
+  @font-face { font-family: "Courier Prime"; font-weight: 400; src: url(assets/fonts/CourierPrime-Regular.ttf); }
+  @font-face { font-family: "Courier Prime"; font-weight: 700; src: url(assets/fonts/CourierPrime-Bold.ttf); }
+  @font-face { font-family: "Arimo"; font-weight: 400; src: url(assets/fonts/Arimo-Regular.ttf); }
+  @font-face { font-family: "Arimo"; font-weight: 700; src: url(assets/fonts/Arimo-Bold.ttf); }
+
+  :root {
+    --desk: #5e5e5e;
+    --red: #e3262b;
+    --folder: #f6ef6a;
+    --folder-dark: #d9cf3a;
+    --label: #f4ec4a;
+    --w98: #c0c0c0;
+    --w98-light: #ffffff;
+    --w98-mid: #dfdfdf;
+    --w98-dark: #808080;
+    --w98-black: #0a0a0a;
+    --navy: #000080;
+    --navy-2: #1084d0;
+    --box-blue: #0000a8;
+    --hl-yellow: #fcefc3;
+    --hl-blue: #1f3fd6;
+  }
+
+  @page { size: 960px 540px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #2b2b2b; }
+  body { font-family: "Arimo", Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .slide {
+    position: relative; width: 960px; height: 540px; overflow: hidden;
+    background: var(--desk); margin: 0 auto 24px; page-break-after: always; break-after: page;
+  }
+  @media print { html, body { background: none; } .slide { margin: 0; } }
+  .abs { position: absolute; }
+
+  /* ---------- Pastas amarelas ---------- */
+  .folder { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 5; }
+  .folder svg { width: 66px; height: 52px; filter: drop-shadow(1px 2px 0 rgba(0,0,0,.25)); }
+  .folder span { font-family: "Pixel", monospace; font-size: 19px; line-height: 1; color: var(--label); white-space: nowrap; letter-spacing: .3px; }
+
+  /* ---------- Seleção tracejada ---------- */
+  .sel { position: absolute; outline: 1.6px dashed var(--label); outline-offset: 0; }
+
+  /* ---------- Documento de briefing ---------- */
+  .doc { background: #f2f2f2; box-shadow: 10px 12px 0 rgba(0,0,0,.28); padding: 38px 34px 20px 34px; }
+  .doc::after { content: ""; position: absolute; top: 0; right: 0; width: 8px; height: 100%; background: #e2e2e2; border-left: 1px solid #d0d0d0; }
+  .doc h3 { font: 700 12.5px/1.2 "Arimo", sans-serif; color: #111; margin-bottom: 6px; }
+  .doc h3 small { font-weight: 400; font-size: 10px; }
+  .brief { border: 1px solid #555; width: 100%; border-collapse: collapse; background: #f7f7f7; }
+  .brief td { border: 1px solid #555; padding: 3px 4px; font: 400 7.6px/1.38 "Arimo", sans-serif; color: #1a1a1a; vertical-align: top; }
+  .brief b { font-weight: 700; }
+  .brief p + p { margin-top: 5px; }
+  .hl { background: var(--hl-yellow); }
+  .hlb { background: var(--hl-blue); color: #fff; }
+  .yt { display: inline-block; width: 8px; height: 6px; background: #e62117; border-radius: 2px; vertical-align: -0.5px; margin-right: 2px; position: relative; }
+  .yt::after { content: ""; position: absolute; left: 3px; top: 1.5px; border-left: 3px solid #fff; border-top: 1.5px solid transparent; border-bottom: 1.5px solid transparent; }
+  .chip { background: #e8eaed; border-radius: 6px; padding: 0 3px; }
+  .cmt { position: absolute; display: flex; gap: 3px; background: #fff; border-radius: 9px; padding: 2px 5px; box-shadow: 0 1px 3px rgba(0,0,0,.35); font-size: 8px; color: #444; }
+  .ref-thumb { width: 46px; height: 62px; margin-top: 4px; }
+
+  /* ---------- Criativo 9:16 ---------- */
+  .creative { position: absolute; background: #2a2a2a; overflow: hidden; z-index: 2; }
+  .creative img, .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .ph-label {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    text-align: center; color: #cfcfcf; font: 700 11px/1.3 "Montserrat", sans-serif; letter-spacing: .5px;
+    background: repeating-linear-gradient(135deg, #3a3a3a 0 10px, #333 10px 20px);
+  }
+  .ph-label code { font: 400 10px "Courier Prime", monospace; color: var(--label); }
+  .ph { position: relative; overflow: hidden; }
+  .ph.light .ph-label { background: repeating-linear-gradient(135deg, #ececec 0 8px, #e4e4e4 8px 16px); color: #888; }
+  .ph.light .ph-label code { color: #999; }
+
+  /* ---------- Janelas Win98 ---------- */
+  .win {
+    position: absolute; background: var(--w98); z-index: 6;
+    border: 2px solid; border-color: var(--w98-mid) var(--w98-black) var(--w98-black) var(--w98-mid);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--w98-dark), 4px 5px 0 rgba(0,0,0,.25);
+    padding: 2px;
+  }
+  .tb { height: 18px; display: flex; align-items: center; justify-content: space-between; padding: 0 2px 0 4px;
+        background: linear-gradient(90deg, var(--navy), var(--navy-2)); color: #fff; font: 700 10.5px "Arimo", sans-serif; }
+  .tb.plain { background: #fff; color: #000; font-weight: 400; }
+  .tb .btns { display: flex; gap: 1px; }
+  .tb .btns i {
+    width: 14px; height: 12px; background: var(--w98); display: grid; place-items: center; font: 700 9px/1 "Arimo"; color: #000; font-style: normal;
+    border: 1px solid; border-color: #fff var(--w98-black) var(--w98-black) #fff;
+  }
+  .tb .btns i.gap { margin-left: 2px; }
+  .menubar { display: flex; gap: 10px; padding: 2px 6px; font: 400 10px "Arimo"; }
+  .menubar u { text-decoration: none; }
+  .menubar u::first-letter { text-decoration: underline; }
+  .sunken { background: #fff; border: 2px solid; border-color: var(--w98-dark) #fff #fff var(--w98-dark); }
+  .toolbar { display: flex; align-items: center; gap: 3px; padding: 3px 4px; }
+  .toolbar .sel-box { width: 44px; height: 14px; background: #fff; border: 1px solid var(--w98-dark); font: 400 8px/12px "Arimo"; padding-left: 3px; position: relative; }
+  .toolbar .sel-box::after { content: "▾"; position: absolute; right: 2px; top: 0; font-size: 8px; }
+  .toolbar i { width: 16px; height: 15px; display: grid; place-items: center; font-style: normal; font: 700 10px "Arimo"; color: #222; border: 1px solid; border-color: #fff var(--w98-dark) var(--w98-dark) #fff; }
+  .toolbar i.on { border-color: var(--w98-dark) #fff #fff var(--w98-dark); background: #d6d6d6; }
+  .toolbar .sq { width: 8px; height: 8px; border: 1px dotted #333; }
+  .toolbar .red { color: #c00; }
+  .toolbar .big { font: 700 14px "Times New Roman", serif; }
+
+  /* Painel de métricas (estilo gerenciador de anúncios) */
+  .metrics { padding: 5px 7px 6px; background: #fff; }
+  .metrics .mh { display: flex; justify-content: space-between; align-items: center; font: 700 8px "Arimo"; color: #1c1e21; }
+  .metrics .mh .pills { display: flex; gap: 4px; }
+  .metrics .mh .pills span { border: 1px solid #ccd0d5; border-radius: 3px; padding: 1px 4px; font-weight: 400; font-size: 7px; }
+  .metrics .sub { font: 400 7px "Arimo"; color: #606770; margin-top: 1px; }
+  .metrics .row { display: grid; gap: 4px; margin-top: 6px; }
+  .metrics .cell { border: 1px solid #dddfe2; border-radius: 3px; padding: 3px 5px; }
+  .metrics .cell .l { font: 700 7px "Arimo"; color: #1c1e21; }
+  .metrics .cell .l::after { content: " ⓘ"; font-weight: 400; color: #606770; }
+  .metrics .cell .v { font: 400 15px/1.2 "Arimo"; color: #1c1e21; }
+  .metrics.flat .cell { border: 0; padding: 2px 0; }
+
+  /* Células de "Valor usado" */
+  .spend { background: #fff; }
+  .spend .strip { height: 18px; background: #f2f3f5; border-bottom: 1px solid #e4e6eb; }
+  .spend .val { text-align: center; color: #1c1e21; font: 400 15px/1.2 "Arimo"; padding: 22px 0 22px; }
+  .spend .val small { display: block; color: #606770; font-size: 10px; margin-top: 3px; }
+
+  /* Barra de título cinza (slides 6 e 7) */
+  .titlebar-g {
+    position: absolute; left: 30px; top: 34px; width: 900px; height: 60px; background: #c4c4c4;
+    box-shadow: 3px 4px 0 rgba(0,0,0,.18); display: flex; align-items: center; padding: 0 14px; overflow: hidden; white-space: nowrap;
+  }
+
+  /* ================= SLIDE 1 — CAPA ================= */
+  .cover {
+    background:
+      radial-gradient(ellipse at 50% 35%, rgba(255,255,255,.07), transparent 60%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      #121212;
+  }
+  .cover .who { position: absolute; right: 92px; top: 24px; color: #fff; font: 700 12.5px "Montserrat"; letter-spacing: .2px; }
+  .cover .who span { font-weight: 700; opacity: .95; }
+  .cover .who b { font-weight: 900; }
+  .cover .num { position: absolute; left: 0; right: 0; top: 20px; text-align: center; color: #fff; font: 900 248px/1 "Montserrat"; letter-spacing: -6px; }
+  .cover .sub { position: absolute; left: 0; right: 0; top: 272px; text-align: center; color: var(--red); font: 900 74px/1 "Montserrat"; letter-spacing: -1px; }
+  .cover .proof { position: absolute; left: 66px; top: 362px; width: 388px; height: 200px; background: #fff; display: grid; grid-template-columns: 1fr 1fr; box-shadow: 0 0 0 1px #ddd; }
+  .cover .proof .spend { border-right: 1px solid #e4e6eb; }
+  .cover .proof .spend .val { padding: 16px 0 14px; font-size: 11.5px; }
+  .cover .proof .spend .val small { font-size: 8.5px; }
+  .cover .proof .zoom .val { font-size: 19px; padding: 12px 0 10px; }
+  .cover .proof .zoom .val small { font-size: 12px; }
+  .cover .tag { position: absolute; left: 560px; top: 382px; color: #fff; font: 900 39px/1.02 "Montserrat"; letter-spacing: -.5px; }
+  .cover .quote { position: absolute; right: 92px; top: 478px; width: 330px; text-align: right; color: #e9e9e9; font: 400 10.5px/1.45 "Arimo"; }
+
+  /* ================= SLIDE 6 — SOBRE ================= */
+  .about-title { font: 400 46px/1 "Pixel", monospace; color: var(--red); letter-spacing: 1px; }
+  .about-title::after { content: "......................................................................................................"; letter-spacing: 0; font-size: 46px; }
+  .cmd .body { background: #000; color: #f2f2f2; height: calc(100% - 20px); display: flex; }
+  .cmd .text { flex: 1; padding: 10px 12px 10px 12px; font: 400 13.4px/1.62 "Courier Prime", monospace; text-align: justify; }
+  .cmd .text p + p { margin-top: 18px; }
+  .cmd .mail { font-size: 11px; background: #222; padding: 1px 4px; color: #bbb; }
+  .scroll { width: 16px; background: #dcdcdc; display: flex; flex-direction: column; justify-content: space-between; }
+  .scroll i { height: 16px; background: var(--w98); border: 1px solid; border-color: #fff var(--w98-dark) var(--w98-dark) #fff; display: grid; place-items: center; font: 400 7px "Arimo"; font-style: normal; }
+  .scroll .thumb { height: 26px; margin-top: 10px; margin-bottom: auto; }
+  .logos { position: absolute; left: 612px; top: 130px; width: 318px; height: 410px; background: #fff; padding: 8px 6px; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 44px; gap: 4px 6px; }
+  .logo { position: relative; display: grid; place-items: center; }
+  .logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; }
+  .logo span { font: 900 9.5px "Montserrat"; color: #b9b9b9; letter-spacing: .5px; }
+  .worked { position: absolute; left: 686px; top: 101px; color: var(--red); font: 700 21px "Montserrat"; letter-spacing: .3px; }
+
+  /* ================= SLIDE 7 — PROCESSO ================= */
+  .proc-title { font: 400 25px/1 "Arimo"; color: var(--red); letter-spacing: .5px; }
+  .notes .paper { background: #fff; height: calc(100% - 38px); margin-top: 2px; position: relative; display: flex; }
+  .notes .paper svg { flex: 1; }
+  .ok-btn { width: 50px; height: 22px; display: grid; place-items: center; font: 400 10px "Arimo"; background: var(--w98); border: 1px solid; border-color: #fff var(--w98-black) var(--w98-black) #fff; box-shadow: inset -1px -1px 0 var(--w98-dark); }
+  .roas td { font: 400 10.5px "Arimo"; color: #333; padding: 6px 10px 6px 0; text-align: right; border-bottom: 1px solid #eee; }
+  .roas td span { text-decoration: underline dotted #aaa; text-underline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Ícone de pasta reutilizável -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="folder" viewBox="0 0 66 52">
+      <path d="M2 8 Q2 4 6 4 H24 L29 9 H60 Q64 9 64 13 V46 Q64 50 60 50 H6 Q2 50 2 46 Z" fill="#d9cf3a"/>
+      <path d="M2 17 Q2 14 5 14 H61 Q64 14 64 17 V46 Q64 50 60 50 H6 Q2 50 2 46 Z" fill="#f6ef6a"/>
+      <path d="M5 16 H61" stroke="#fffbb8" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="folder-open" viewBox="0 0 66 52">
+      <path d="M2 8 Q2 4 6 4 H24 L29 9 H58 Q62 9 62 13 V46 H2 Z" fill="#d9cf3a"/>
+      <rect x="9" y="12" width="46" height="30" fill="#fff" stroke="#bbb" stroke-width=".6"/>
+      <path d="M2 22 Q2 19 5 19 H62 Q66 19 65 22 L61 47 Q60 50 57 50 H6 Q2 50 2 46 Z" fill="#f6ef6a"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- =====================================================
+     SLIDE 1 — CAPA
+     ===================================================== -->
+<section class="slide cover">
+  <div class="who"><b>SEU NOME</b> <span>| CREATIVE STRATEGIST</span></div>
+  <div class="num">1,6M</div>
+  <div class="sub">USD EM VERBA DE ADS</div>
+
+  <!-- Print do gerenciador (recriado). Para usar um print real, troque por:
+       <img src="assets/img/capa-print.png" ...> -->
+  <div class="proof">
+    <div class="spend">
+      <div class="strip"></div><div class="val">US$ 730.892,63<small>Valor usado</small></div>
+      <div class="strip"></div><div class="val">US$ 216.133,11<small>Valor usado</small></div>
+    </div>
+    <div class="spend zoom">
+      <div class="strip"></div><div class="val">US$ 670.693,57<small>Valor usado</small></div>
+      <div class="strip"></div><div class="val">2,56<small>Média (ROAS)</small></div>
+    </div>
+  </div>
+
+  <div class="tag">NÃO SOU NOVO<br>NESSE JOGO.</div>
+  <div class="quote">“Ficamos muito satisfeitos com o resultado do trabalho e escalamos bastante com ele.” – Nome S., COO</div>
+</section>
+
+<!-- =====================================================
+     SLIDE 2 — CASE 1
+     ===================================================== -->
+<section class="slide">
+  <div class="abs" style="left:182px; top:16px; color:var(--red); font:700 23px 'Montserrat'; letter-spacing:.3px;">[ Sobre mim no final ]</div>
+
+  <div class="sel doc" style="left:134px; top:60px; width:404px; height:388px; padding-top:42px;">
+    <h3>VID12 – SÉRUM VITAMINA C</h3>
+    <table class="brief">
+      <tr><td>FORMATO: UGC</td></tr>
+      <tr><td>ÂNGULO: rotina matinal + prova social. Leve e bem-humorado, como um story para as amigas.</td></tr>
+      <tr><td>AVATAR: MULHER DA REFERÊNCIA (28–35 anos, pele real, banheiro claro)</td></tr>
+      <tr><td>NOTAS: Deve parecer gravado no celular, sem cara de anúncio. Luz natural da janela. Ela alterna entre falar com a câmera e mostrar o produto bem de perto. Se ficar difícil manter a consistência, pode simplificar para uma versão só falando com a câmera.</td></tr>
+      <tr><td>HOOK: “Ninguém me avisou que a minha pele ia ficar assim em 3 semanas”</td></tr>
+      <tr><td style="position:relative;">
+        <p>BODY: <span class="hl">Eu juro que não esperava nada. Comprei porque minha irmã não parava de falar, e agora sou eu que não paro.</span> Passo de manhã, antes do protetor, duas gotinhas e pronto.</p>
+        <p><span class="hl">A textura é leve, não deixa a pele grudando e não mancha a maquiagem.</span> As manchinhas do lado da boca clarearam, e olha que eu já tinha tentado de tudo…</p>
+        <p>E não é caro, viu? <span class="hl">Tem kit com desconto no link</span>, então se você tava esperando um sinal, é esse aqui.</p>
+        <div class="cmt" style="right:4px; bottom:-8px;">▤ ☺</div>
+      </td></tr>
+    </table>
+    <div style="font:400 7.6px 'Arimo'; margin-top:6px;">Ref: <span class="chip"><span class="yt"></span>UGC_ref_serum.mp4</span></div>
+    <div class="ph light ref-thumb"><img src="assets/img/ref-1.jpg" onerror="this.remove()"><div class="ph-label" style="font-size:6px;">REF</div></div>
+  </div>
+  <div class="folder" style="left:126px; top:410px;"><svg><use href="#folder"/></svg><span>BRIEFING.dox</span></div>
+
+  <div class="folder" style="left:705px; top:12px;"><svg><use href="#folder-open"/></svg><span>CREATIVE v1(1)</span></div>
+  <div class="sel creative" style="left:652px; top:96px; width:188px; height:334px;">
+    <img src="assets/img/criativo-1.jpg" onerror="this.remove()">
+    <div class="ph-label">SEU CRIATIVO 9:16<code>assets/img/criativo-1.jpg</code></div>
+  </div>
+
+  <div class="win" style="left:606px; top:428px; width:316px; height:100px;">
+    <div class="tb"><span>Administrator: Command Prompt</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="toolbar"><span class="sel-box">Auto</span><i><span class="sq"></span></i><i>⧉</i><i>▤</i><i class="red">✣</i><i>⇲</i><i class="on">⧉</i><i class="big">A</i></div>
+    <div class="metrics flat" style="padding-top:3px;">
+      <div class="mh"><span>Visão geral do desempenho</span><span class="pills"><span>Dia ▾</span><span>Histórico: Todos ▾</span></span></div>
+      <div class="row" style="grid-template-columns:1fr 1fr 1fr; margin-top:3px;">
+        <div class="cell"><div class="l">Compras no site</div><div class="v">126</div></div>
+        <div class="cell"><div class="l">Custo por compra</div><div class="v">US$ 7,90</div></div>
+        <div class="cell"><div class="l">ROAS de compras</div><div class="v">3,09</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SLIDE 3 — CASE 2
+     ===================================================== -->
+<section class="slide">
+  <div class="folder" style="left:184px; top:0px;"><svg><use href="#folder"/></svg><span>BRIEFING.dox</span></div>
+  <div class="sel doc" style="left:172px; top:88px; width:402px; height:384px; padding-top:42px;">
+    <h3>AD 02 palmilha – seu joão</h3>
+    <table class="brief">
+      <tr><td><b>FORMATO:</b> UGC</td></tr>
+      <tr><td><b>ÂNGULO:</b> espontâneo + pitch indireto + slice of life</td></tr>
+      <tr><td><b>AVATAR:</b> homem de 65+ anos, cabelo grisalho, simpático e acessível, roupa bem casual. Tênis de caminhada <span class="hl">em evidência</span>.</td></tr>
+      <tr><td><b>NOTAS:</b> Precisa ter uma vibe de “vovô descolado”, gente boa, que acabou de descobrir como gravar vídeo. Ele não deve parecer ator. Gravado com o celular, na rua, com som ambiente real. <span class="hl">Não adicionar trilha.</span> O vídeo todo deve ter uma câmera levemente tremida.</td></tr>
+      <tr><td><b>HOOK:</b> <span class="hl">“Gente, deixa eu mostrar uma coisa que mudou as minhas caminhadas!”</span></td></tr>
+      <tr><td>
+        <p><b>BODY:</b><br>A tecnologia é uma loucura, né? Como vocês podem ver, <span class="hl">eu tô aqui na rua</span>, fazendo minha caminhada de todo dia, e ó… o joelho nem reclama mais.</p>
+        <p>Na minha época a gente aguentava a dor calado. Mas olha só isso aqui: <span class="hl">uma palminha</span>, coloca no tênis e pronto. Dez minutos depois já senti diferença.</p>
+        <p>Eu andava pouco porque doía tudo. Agora levo até a <span class="hl">minha esposa</span> e os netos pra passear. Não dá pra parar.</p>
+        <p>Sou um vovô moderno, peguei o jeito… on-line. Acho que é assim que fala: “vou deixar o link na descrição”. <span class="hl">Me avisem se eu deixei mesmo o link. Tava em promoção da última vez que eu vi.</span></p>
+      </td></tr>
+    </table>
+  </div>
+
+  <div class="sel creative" style="left:708px; top:90px; width:188px; height:334px;">
+    <img src="assets/img/criativo-2.jpg" onerror="this.remove()">
+    <div class="ph-label">SEU CRIATIVO 9:16<code>assets/img/criativo-2.jpg</code></div>
+  </div>
+  <div class="folder" style="left:704px; top:404px;"><svg><use href="#folder-open"/></svg><span>CREATIVE_done</span></div>
+</section>
+
+<!-- =====================================================
+     SLIDE 4 — CASE 3
+     ===================================================== -->
+<section class="slide">
+  <div class="sel doc" style="left:88px; top:44px; width:486px; height:396px; padding:22px 18px 16px;">
+    <h3 style="font-size:13.5px;">VID104 – BRINCOS DOS SIGNOS</h3>
+    <table class="brief">
+      <tr><td style="font-size:8.6px;">FORMATO: UGC</td></tr>
+      <tr><td style="font-size:8.6px;">ÂNGULO: CONTEÚDO – PITCH INDIRETO – ORGÂNICO</td></tr>
+      <tr><td style="font-size:8.6px;">AVATAR: Mulher ruiva na casa dos 20 anos, com roupa de verão clean e simples. Precisa ter uma vibe <u style="text-decoration-color:#d00; text-decoration-style:wavy;">etérea</u>, como se não fosse alguém comum que você encontra por aí.</td></tr>
+      <tr><td style="font-size:8.6px;">NOTAS: Sem locução. A ideia é replicar um conteúdo orgânico que você veria no TikTok. Estética limpa do começo ao fim.</td></tr>
+      <tr><td style="font-size:8.6px;">TRILHA: <span class="chip"><span class="yt"></span>Música de referência | Cover piano</span></td></tr>
+      <tr><td style="font-size:8.6px;">HOOK: ela entra no vídeo segurando vários brincos e acena para a câmera.</td></tr>
+      <tr><td style="font-size:8.6px;">HEADLINE: <span class="hl">“COMO CADA SIGNO USARIA ESSE BRINCO”</span></td></tr>
+      <tr><td style="font-size:8.6px;">
+        <p>BODY:<br>Close do queixo até o tronco. Os brincos devem ficar <u>no centro</u> da composição, com boa visibilidade.</p>
+        <p>Para cada brinco, ela mostra a peça perto da câmera e depois um corte seco para ela usando. <span class="hlb">POR FAVOR, USE OS BRINCOS QUE EU GEREI NO FREEPIK COM OS SIGNOS CORRETOS.</span></p>
+        <p>Enquanto usa cada peça, ela mexe as mãos naturalmente, às vezes destacando o brinco, às vezes fazendo um coração com os dedos — gestos simples pra trazer mais realismo.</p>
+      </td></tr>
+    </table>
+  </div>
+  <div class="folder" style="left:38px; top:418px;"><svg><use href="#folder"/></svg><span>BRIEFING.dox</span></div>
+
+  <div class="folder" style="left:745px; top:6px;"><svg><use href="#folder-open"/></svg><span>CREATIVE_RIGHT VERSION (1)</span></div>
+  <div class="sel creative" style="left:708px; top:90px; width:188px; height:334px;">
+    <img src="assets/img/criativo-3.jpg" onerror="this.remove()">
+    <div class="ph-label">SEU CRIATIVO 9:16<code>assets/img/criativo-3.jpg</code></div>
+  </div>
+
+  <div class="win" style="left:568px; top:414px; width:354px; height:110px;">
+    <div class="tb"><span>Administrator: Command Prompt</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="toolbar"><span class="sel-box">Auto</span><i><span class="sq"></span></i><i>⧉</i><i>▤</i><i class="red">✣</i><i>⇲</i><i class="on">⧉</i><i class="big">A</i></div>
+    <div class="metrics flat" style="padding-top:2px;">
+      <div class="mh"><span>▶ Desempenho do vídeo</span></div>
+      <div class="sub">Veja como o público está interagindo com o seu criativo de vídeo.</div>
+      <div class="row" style="grid-template-columns:1fr 1.2fr 1.3fr 1fr; margin-top:3px;">
+        <div class="cell"><div class="l">Reproduções</div><div class="v">189.750</div></div>
+        <div class="cell"><div class="l">Tempo médio</div><div class="v">00:13</div></div>
+        <div class="cell"><div class="l">Atenção inicial</div><div class="v">65%</div></div>
+        <div class="cell"><div class="l">Retenção</div><div class="v">14,14%</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SLIDE 5 — CASE 4
+     ===================================================== -->
+<section class="slide">
+  <div class="folder" style="left:226px; top:4px;"><svg><use href="#folder"/></svg><span>BRIEFING.dox</span></div>
+  <div class="sel doc" style="left:168px; top:82px; width:402px; height:372px; padding-top:42px;">
+    <h3>AD 01 - <small>A HISTÓRIA</small></h3>
+    <table class="brief">
+      <tr><td><b>FORMATO:</b> cinematográfico, histórico, narrativo.</td></tr>
+      <tr><td><b>ÂNGULO:</b> Foco forte em storytelling narrativo e visual cinematográfico. Deve ter impacto imediato e parecer uma grande produção, não um anúncio. Venda indireta que soa como uma descoberta.</td></tr>
+      <tr><td><b>AVATAR:</b></td></tr>
+      <tr><td><b>NOTAS:</b> Gerações cinematográficas em IA durante todo o vídeo. Trilha cinematográfica, pausas dramáticas, sensação geral de filme é essencial.<p>Trilha: <span class="chip"><span class="yt"></span>Vivaldi | As Quatro Estações – Inverno</span></p></td></tr>
+      <tr><td class="hl"><b>HOOK:</b> Há 130 anos, um relojoeiro fez uma promessa. Ninguém acreditou nele.</td></tr>
+      <tr><td style="position:relative;">
+        <p><b>BODY:</b> <span class="hl">O que pouca gente sabe é que o relógio mais preciso do século XIX não saiu de uma grande fábrica.</span> Saiu de uma oficina de fundo de quintal, à luz de vela.</p>
+        <p>Por 130 anos, o projeto ficou guardado. Nunca foi vendido para quem mais precisava dele.</p>
+        <p><span class="hl">Porque, em algum momento, alguém decidiu que precisão era luxo. E assim ficou, por gerações.</span></p>
+        <p>Mas o projeto nunca desapareceu. <span class="hl">Uma peça que chamou atenção em silêncio agora está disponível.</span> Montagem manual. <span style="background:#c9d6f5;">Um relógio que faz o que a relojoaria sabe há mais de um século. Funciona.</span></p>
+        <p>A história completa está esperando por você.</p>
+        <div class="cmt" style="right:4px; bottom:-8px;">▤ ☺</div>
+      </td></tr>
+    </table>
+  </div>
+
+  <div class="sel creative" style="left:654px; top:82px; width:188px; height:334px;">
+    <img src="assets/img/criativo-4.jpg" onerror="this.remove()">
+    <div class="ph-label">SEU CRIATIVO 9:16<code>assets/img/criativo-4.jpg</code></div>
+  </div>
+  <div class="folder" style="left:644px; top:398px;"><svg><use href="#folder-open"/></svg><span>CREATIVE_adjusted</span></div>
+</section>
+
+<!-- =====================================================
+     SLIDE 6 — SOBRE MIM
+     ===================================================== -->
+<section class="slide">
+  <div class="titlebar-g"><span class="about-title">SOBRE MIM</span></div>
+
+  <div class="win cmd" style="left:66px; top:120px; width:528px; height:396px; padding:1px;">
+    <div class="tb plain" style="height:20px; border-bottom:1px solid #999;"><span style="font-size:11px;"><b style="background:#000;color:#fff;font-size:8px;padding:0 2px;margin-right:4px;">C:\</b>C:\WINDOWS\system32\cmd.exe</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="body">
+      <div class="text">
+        <p>Agora que você já viu o que veio ver, prazer: sou Creative Strategist e Editor de Vídeo com foco em DTC e E-commerce, trabalhando principalmente com Marketing de Resposta Direta para META Ads, Google Ads e TikTok Shop. Minha especialidade é fazer até o scroller mais viciado parar e assistir, levando produtos e ideias para novos públicos.</p>
+        <p>Fora do trabalho, [seu hobby 1], [seu hobby 2] e [seu hobby 3], mas prefiro falar disso pessoalmente_</p>
+        <p>Fale comigo @: <span class="mail">seuemail@email.com</span></p>
+      </div>
+      <div class="scroll"><i>▲</i><i class="thumb"></i><i>▼</i></div>
+    </div>
+  </div>
+
+  <div class="worked">[trabalhei com]</div>
+  <div class="logos">
+    <!-- Troque pelos logos reais: assets/img/logos/logo-01.png ... logo-32.png -->
+    <div class="logo"><img src="assets/img/logos/logo-01.png" onerror="this.remove()"><span>LOGO 01</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-02.png" onerror="this.remove()"><span>LOGO 02</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-03.png" onerror="this.remove()"><span>LOGO 03</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-04.png" onerror="this.remove()"><span>LOGO 04</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-05.png" onerror="this.remove()"><span>LOGO 05</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-06.png" onerror="this.remove()"><span>LOGO 06</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-07.png" onerror="this.remove()"><span>LOGO 07</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-08.png" onerror="this.remove()"><span>LOGO 08</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-09.png" onerror="this.remove()"><span>LOGO 09</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-10.png" onerror="this.remove()"><span>LOGO 10</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-11.png" onerror="this.remove()"><span>LOGO 11</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-12.png" onerror="this.remove()"><span>LOGO 12</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-13.png" onerror="this.remove()"><span>LOGO 13</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-14.png" onerror="this.remove()"><span>LOGO 14</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-15.png" onerror="this.remove()"><span>LOGO 15</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-16.png" onerror="this.remove()"><span>LOGO 16</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-17.png" onerror="this.remove()"><span>LOGO 17</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-18.png" onerror="this.remove()"><span>LOGO 18</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-19.png" onerror="this.remove()"><span>LOGO 19</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-20.png" onerror="this.remove()"><span>LOGO 20</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-21.png" onerror="this.remove()"><span>LOGO 21</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-22.png" onerror="this.remove()"><span>LOGO 22</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-23.png" onerror="this.remove()"><span>LOGO 23</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-24.png" onerror="this.remove()"><span>LOGO 24</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-25.png" onerror="this.remove()"><span>LOGO 25</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-26.png" onerror="this.remove()"><span>LOGO 26</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-27.png" onerror="this.remove()"><span>LOGO 27</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-28.png" onerror="this.remove()"><span>LOGO 28</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-29.png" onerror="this.remove()"><span>LOGO 29</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-30.png" onerror="this.remove()"><span>LOGO 30</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-31.png" onerror="this.remove()"><span>LOGO 31</span></div>
+    <div class="logo"><img src="assets/img/logos/logo-32.png" onerror="this.remove()"><span>LOGO 32</span></div>
+  </div>
+
+  <div class="win" style="left:678px; top:232px; width:188px; height:200px;">
+    <div class="tb"><span>Usuário</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="toolbar" style="padding:2px;"><i style="width:12px;height:11px;"></i><i style="width:12px;height:11px;"></i><span class="sel-box" style="width:56px;height:11px;font-size:6px;line-height:9px;">C:\Usuário</span><i style="width:12px;height:11px;"></i></div>
+    <div class="ph sunken" style="height:154px;">
+      <img src="assets/img/foto.jpg" onerror="this.remove()">
+      <div class="ph-label" style="background:#1f55d6; color:#dce6ff;">SUA FOTO<code style="color:#fff;">assets/img/foto.jpg</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SLIDE 7 — PROCESSO / RESULTADOS
+     ===================================================== -->
+<section class="slide">
+  <div class="titlebar-g" style="top:28px; height:44px;">
+    <span class="proc-title">PROCESSO</span>
+    <span class="proc-title" style="flex:1; overflow:hidden;">______________________________________________________________</span>
+    <span class="proc-title">RESULTADOS</span>
+    <span class="proc-title" style="width:150px; overflow:hidden;">______________________</span>
+  </div>
+
+  <!-- janelas empilhadas de fundo -->
+  <div class="win" style="left:42px; top:122px; width:336px; height:296px;"><div class="tb"><span>Notes</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div></div>
+  <div class="win" style="left:50px; top:129px; width:336px; height:296px;"><div class="tb"><span>Notes</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div></div>
+  <div class="win" style="left:58px; top:136px; width:336px; height:296px;"><div class="tb"><span>Notes</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div></div>
+  <div class="win notes" style="left:66px; top:143px; width:336px; height:296px;">
+    <div class="tb"><span>Notes</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="menubar"><u>Arquivo</u><u>Editar</u><u>Pesquisar</u><u>Ajuda</u></div>
+    <div class="paper sunken">
+      <svg viewBox="0 0 300 228" font-family="Arimo, Arial, sans-serif">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 Z" fill="#f6e91d" stroke="#7a6f00" stroke-width=".8"/>
+          </marker>
+        </defs>
+        <g fill="none" stroke-linejoin="miter">
+          <!-- contorno -->
+          <g stroke="#7a6f00" stroke-width="8">
+            <path d="M28 92 V30 H44"/><path d="M128 30 H158"/><path d="M240 30 H262 V68"/>
+            <path d="M262 100 V128"/><path d="M262 172 V198 H222"/><path d="M106 205 H64 V184"/><path d="M48 158 L26 136"/>
+          </g>
+          <g stroke="#f6e91d" stroke-width="6" marker-end="url(#ah)">
+            <path d="M28 92 V30 H44"/><path d="M128 30 H158"/><path d="M240 30 H262 V68"/>
+            <path d="M262 100 V128"/><path d="M262 172 V198 H222"/><path d="M106 205 H64 V184"/><path d="M48 158 L26 136"/>
+          </g>
+        </g>
+        <g font-size="8" fill="#f6e91d">
+          <rect x="66" y="20" width="62" height="20" fill="#0000a8"/><text x="73" y="33">PESQUISA</text>
+          <rect x="166" y="20" width="70" height="20" fill="#0000a8"/><text x="174" y="33">ROADMAP</text>
+          <rect x="230" y="78" width="54" height="20" fill="#0000a8"/><text x="238" y="91">BRIEFING</text>
+          <rect x="212" y="136" width="66" height="20" fill="#0000a8"/><text x="220" y="149">PRODUÇÃO</text>
+          <rect x="112" y="196" width="104" height="20" fill="#0000a8"/><text x="120" y="209">PÓS-PRODUÇÃO</text>
+          <rect x="38" y="160" width="70" height="20" fill="#0000a8"/><text x="44" y="173">LANÇAMENTO</text>
+          <rect x="8" y="98" width="74" height="30" fill="#0000a8"/><text x="13" y="110">ANÁLISE DE</text><text x="13" y="121">PERFORMANCE</text>
+        </g>
+        <circle cx="152" cy="116" r="54" fill="#f6ec1f" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="1.5 3"/>
+        <g font-family="Montserrat" font-weight="900" font-style="italic" font-size="16.5" fill="#e3262b" text-anchor="middle" stroke="#4a0000" stroke-width=".6" paint-order="stroke">
+          <text x="146" y="112">CREATIVE</text><text x="158" y="133">FLYWHEEL</text>
+        </g>
+      </svg>
+    </div>
+    <div style="display:flex; justify-content:space-between; padding:0 1px;"><span style="font-size:7px;">◂</span><span style="font-size:7px;">▸</span></div>
+  </div>
+
+  <!-- seta -->
+  <svg class="abs" style="left:414px; top:262px;" width="44" height="26" viewBox="0 0 44 26">
+    <path d="M1 8 H26 V1 L43 13 L26 25 V18 H1 Z" fill="#f6e91d" stroke="#7a6f00" stroke-width="1.2"/>
+  </svg>
+
+  <div class="win" style="left:472px; top:138px; width:232px; height:242px;">
+    <div class="tb" style="height:26px;"><span style="font:400 22px/1 'Pixel'; letter-spacing:1px;">INSTALL</span><span class="btns"><i>_</i><i>□</i><i class="gap">×</i></span></div>
+    <div class="spend sunken" style="height:204px; margin-top:4px;">
+      <div class="strip" style="height:14px;"></div>
+      <div class="val" style="padding:22px 0;">US$ 730.892,63<small>Valor usado</small></div>
+      <div class="strip" style="height:26px;"></div>
+      <div class="val" style="padding:22px 0;">US$ 216.133,11<small>Valor usado</small></div>
+    </div>
+  </div>
+
+  <div class="win" style="left:750px; top:114px; width:156px; height:294px;">
+    <div class="tb"><span>Bem-vindo</span><span class="btns"><i>?</i><i class="gap">×</i></span></div>
+    <div class="sunken" style="margin:10px 6px 0; height:212px; padding:4px 6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; font:700 8.5px/1.2 'Arimo'; border-bottom:1px solid #ddd; padding-bottom:4px;">
+        <span>ROAS<br><span style="font-weight:400;">(retorno…</span></span><span style="font-weight:400;">↑↓ ▾</span><span style="width:9px;height:9px;border-radius:50%;background:#1877f2;display:inline-block;"></span>
+      </div>
+      <table class="roas" style="width:100%; border-collapse:collapse;">
+        <tr><td><span>5,81</span></td></tr>
+        <tr><td><span>2,55</span></td></tr>
+        <tr><td><span>3,44</span></td></tr>
+        <tr><td><span>6,02</span></td></tr>
+        <tr><td><span>4,23</span></td></tr>
+        <tr><td><span>2,44</span></td></tr>
+      </table>
+    </div>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:12px;"><span class="ok-btn">OK</span><span class="ok-btn">Cancelar</span></div>
+  </div>
+</section>
+
+</body>
+</html>
